@@ -216,7 +216,7 @@
             font-weight: 500;
         }
         
-        /* New styles for draggable switches */
+        
         .eq-slider-container {
             display: flex;
             flex-direction: column;
@@ -294,7 +294,7 @@
             gap: 0.5rem;
         }
         
-        /* Animation for playing state */
+       
         .playing .reel:first-child {
             animation: spinReel 4s linear infinite;
         }
@@ -308,7 +308,7 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Chrome compatibility warning */
+        
         .chrome-warning {
             position: fixed;
             top: 0;
@@ -334,7 +334,7 @@
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-    <!-- Chrome compatibility warning -->
+    
     <div class="chrome-warning" id="chromeWarning">
         For best experience, please interact with the page first (click anywhere) to enable audio playback.
         <button id="dismissWarning">OK</button>
@@ -342,7 +342,7 @@
     
     <div class="max-w-4xl w-full bg-white rounded-xl shadow-sm p-6">
         <div class="flex flex-col md:flex-row gap-8">
-            <!-- Cassette Player -->
+           
             <div class="flex-1 flex flex-col items-center">
                 <h1 class="text-xl font-medium mb-6 text-center">CASSETTE</h1>
                 
@@ -359,16 +359,12 @@
                     <div class="cassette-label" id="currentSongLabel">NO TAPE INSERTED</div>
                 </div>
                 
-                <!-- Waveform Visualization 
-                 <div class="tape"></div>
-                
-                
-                -->
+             
                 <div class="waveform w-full mb-4" id="waveform">
-                    <!-- Wave bars will be added by JavaScript -->
+                   
                 </div>
                 
-                <!-- Progress Bar -->
+              
                 <div class="w-full mb-2">
                     <div class="progress-container">
                         <div class="progress-bar" id="songProgress"></div>
@@ -379,7 +375,7 @@
                     </div>
                 </div>
                 
-                <!-- Controls -->
+               
                 <div class="flex items-center gap-3 mb-8">
                     <button class="control-btn" id="prevBtn">
                         <i class="fas fa-backward text-gray-600"></i>
@@ -392,11 +388,11 @@
                     </button>
                 </div>
                 
-                <!-- Equalizer Section -->
+             
                 <div class="eq-section w-full">
                     <div class="eq-section-title">Equalizer Controls</div>
                     <div class="eq-controls-grid">
-                        <!-- Sub Bass -->
+                    
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="subBassSlider">
                                 <div class="eq-track"></div>
@@ -406,7 +402,7 @@
                             <div class="eq-value" id="subBassValue">0dB</div>
                         </div>
                         
-                        <!-- Bass -->
+                       
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="bassSlider">
                                 <div class="eq-track"></div>
@@ -416,7 +412,7 @@
                             <div class="eq-value" id="bassValue">0dB</div>
                         </div>
                         
-                        <!-- Low Mid -->
+                       
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="lowMidSlider">
                                 <div class="eq-track"></div>
@@ -426,7 +422,7 @@
                             <div class="eq-value" id="lowMidValue">0dB</div>
                         </div>
                         
-                        <!-- Mid -->
+                       
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="midSlider">
                                 <div class="eq-track"></div>
@@ -436,7 +432,7 @@
                             <div class="eq-value" id="midValue">0dB</div>
                         </div>
                         
-                        <!-- High Mid -->
+                      
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="highMidSlider">
                                 <div class="eq-track"></div>
@@ -448,7 +444,7 @@
                     </div>
                     
                     <div class="eq-controls-grid mt-2">
-                        <!-- Presence -->
+                    
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="presenceSlider">
                                 <div class="eq-track"></div>
@@ -458,7 +454,7 @@
                             <div class="eq-value" id="presenceValue">0dB</div>
                         </div>
                         
-                        <!-- Treble -->
+                        
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="trebleSlider">
                                 <div class="eq-track"></div>
@@ -468,7 +464,7 @@
                             <div class="eq-value" id="trebleValue">0dB</div>
                         </div>
                         
-                        <!-- Brilliance -->
+                 
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="brillianceSlider">
                                 <div class="eq-track"></div>
@@ -478,7 +474,7 @@
                             <div class="eq-value" id="brillianceValue">0dB</div>
                         </div>
                         
-                        <!-- Air -->
+                        
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="airSlider">
                                 <div class="eq-track"></div>
@@ -488,7 +484,7 @@
                             <div class="eq-value" id="airValue">0dB</div>
                         </div>
                         
-                        <!-- Volume -->
+                        
                         <div class="eq-slider-container">
                             <div class="eq-slider" id="volumeSlider">
                                 <div class="eq-track"></div>
@@ -501,14 +497,14 @@
                 </div>
             </div>
             
-            <!-- Playlist -->
+          
             <div class="flex-1">
                 <h2 class="text-lg font-medium mb-4">PLAYLIST</h2>
                 
                 <div class="mb-4">
                     <input type="file" id="fileInput" accept=".mp3,.wav,.ogg" class="hidden" multiple>
                     <button onclick="document.getElementById('fileInput').click()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded flex items-center gap-2 transition">
-                        <i class="fas fa-plus"></i> Add Songs
+                        <i class="fas fa-plus"></i> Add Songs ++
                     </button>
                 </div>
                 
@@ -534,7 +530,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Audio elements
+        
             const audioPlayer = document.getElementById('audioPlayer');
             const playBtn = document.getElementById('playBtn');
             const prevBtn = document.getElementById('prevBtn');
@@ -548,7 +544,7 @@
             const chromeWarning = document.getElementById('chromeWarning');
             const dismissWarning = document.getElementById('dismissWarning');
            
-            // State variables
+         
             let isPlaying = false;
             let currentSongIndex = -1;
             let songs = [];
@@ -559,10 +555,9 @@
             let userInteracted = false;
             let eqFilters = [];
 
-            // Check if Chrome
+            
             const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
             
-            // Show Chrome warning if needed
             if (isChrome) {
                 chromeWarning.style.display = 'block';
             }
@@ -571,11 +566,11 @@
                 chromeWarning.style.display = 'none';
             });
             
-            // Initialize the player
+          
             initPlayer();
             
             function initPlayer() {
-                // Create waveform bars
+              
                 for (let i = 0; i < 60; i++) {
                     const bar = document.createElement('div');
                     bar.className = 'wave-bar';
@@ -583,13 +578,13 @@
                     waveform.appendChild(bar);
                 }
                 
-                // Set up event listeners
+               
                 playBtn.addEventListener('click', togglePlay);
                 prevBtn.addEventListener('click', playPrevious);
                 nextBtn.addEventListener('click', playNext);
                 fileInput.addEventListener('change', handleFileSelect);
                 
-                // Setup draggable EQ sliders with filter indices
+               
                 setupEqSlider('subBass', -12, 12, true, 0);
                 setupEqSlider('bass', -12, 12, true, 1);
                 setupEqSlider('lowMid', -12, 12, true, 2);
@@ -601,7 +596,7 @@
                 setupEqSlider('air', -12, 12, true, 8);
                 setupEqSlider('volume', 0, 100, false);
                 
-                // Initialize audio context after user interaction
+                
                 document.addEventListener('click', function initAudioContext() {
                     if (!userInteracted) {
                         userInteracted = true;
@@ -613,7 +608,7 @@
                             analyser.fftSize = 256;
                             const source = audioContext.createMediaElementSource(audioPlayer);
                             
-                            // Create EQ filter chain
+                           
                             const frequencies = [60, 250, 500, 1000, 2000, 4000, 6000, 12000, 16000];
                             const types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'peaking', 'peaking', 'highshelf', 'highshelf', 'peaking'];
                             
@@ -627,7 +622,7 @@
                                 return filter;
                             });
 
-                            // Connect nodes: source -> filters -> analyser -> destination
+                            
                             source.connect(eqFilters[0]);
                             for (let i = 0; i < eqFilters.length - 1; i++) {
                                 eqFilters[i].connect(eqFilters[i + 1]);
@@ -637,13 +632,13 @@
 
                             dataArray = new Uint8Array(analyser.frequencyBinCount);
                             
-                            // Start visualization
+                           
                             animateWaveform();
                         } catch (e) {
                             console.error('Audio Context not supported', e);
                         }
                         
-                        // Remove this listener after first interaction
+                        
                         document.removeEventListener('click', initAudioContext);
                     }
                 });
@@ -661,7 +656,7 @@
                 let startTop = 0;
                 let currentValue = isDb ? 0 : 70;
                 
-                // Set initial value display
+                
                 updateValueDisplay();
                 
                 handle.addEventListener('mousedown', startDrag);
@@ -694,12 +689,12 @@
                     const deltaY = y - startY;
                     let newTop = startTop + (deltaY / trackHeight * 100);
                     
-                    // Constrain to slider bounds
+                 
                     newTop = Math.max(0, Math.min(100, newTop));
                     
                     handle.style.top = `${newTop}%`;
                     
-                    // Calculate value based on position
+                    
                     const normalized = (100 - newTop) / 100;
                     currentValue = isDb 
                         ? Math.round(min + (max - min) * normalized)
@@ -747,7 +742,7 @@
                 }
             }
 
-            // ... (keep all remaining JavaScript functions the same) ...
+           
             function togglePlay() {
                 if (songs.length === 0) return;
                 
@@ -764,7 +759,7 @@
                     loadSong(currentSongIndex);
                 }
                 
-                // Resume audio context if it was suspended
+               
                 if (audioContext && audioContext.state === 'suspended') {
                     audioContext.resume();
                 }
@@ -777,7 +772,7 @@
                     })
                     .catch(error => {
                         console.error('Playback failed:', error);
-                        // Show warning if this is Chrome and user hasn't interacted yet
+                        
                         if (isChrome && !userInteracted) {
                             chromeWarning.style.display = 'block';
                         }
@@ -816,7 +811,7 @@
                 const progressPercent = (ct / duration) * 100;
                 document.getElementById('songProgress').style.width = `${progressPercent}%`;
                 
-                // Update time display
+               
                 document.getElementById('currentTime').textContent = formatTime(ct);
                 document.getElementById('totalTime').textContent = formatTime(duration);
             }
@@ -854,7 +849,7 @@
                 audioPlayer.src = song.url;
                 currentSongIndex = index;
                 
-                // Update playlist UI
+               
                 const playlistItems = playlist.querySelectorAll('.playlist-item');
                 playlistItems.forEach(item => item.classList.remove('active'));
                 if (playlistItems[index]) {
@@ -864,16 +859,16 @@
                 
                 updateSongInfo();
                 
-                // Reset progress bar
+             
                 document.getElementById('songProgress').style.width = '0%';
                 document.getElementById('currentTime').textContent = '0:00';
                 
-                // When metadata is loaded, update total time
+                
                 audioPlayer.addEventListener('loadedmetadata', function() {
                     document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
                 }, { once: true });
                 
-                // When song can play through
+               
                 audioPlayer.addEventListener('canplaythrough', function() {
                     if (isPlaying) {
                         playAudio();
@@ -889,7 +884,7 @@
                     const file = files[i];
                     if (file.type.includes('audio')) {
                         const song = {
-                            name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+                            name: file.name.replace(/\.[^/.]+$/, ""), 
                             url: URL.createObjectURL(file)
                         };
                         songs.push(song);
@@ -897,7 +892,7 @@
                 }
                 
                 updatePlaylist();
-                fileInput.value = ''; // Reset file input
+                fileInput.value = ''; 
             }
             
             function updatePlaylist() {
@@ -943,11 +938,11 @@
                 waveAnimationId = requestAnimationFrame(animateWaveform);
             }
             
-            // Set up audio player event listeners
+            
             audioPlayer.addEventListener('timeupdate', updateProgress);
             audioPlayer.addEventListener('ended', playNext);
             
-            // Clean up on page unload
+            
             window.addEventListener('beforeunload', function() {
                 if (waveAnimationId) {
                     cancelAnimationFrame(waveAnimationId);
