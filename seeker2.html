@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title> Cassette</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .cassette {
+            width: 280px;
+            height: 180px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cassette-window {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 80px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .reel {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            position: relative;
+            margin: 0 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .reel::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+        }
+        
+        .reel-center {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #999;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .tape {
+            width: 60px;
+            height: 12px;
+            background-color: #ddd;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cassette-label {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 30px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .knob {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .knob-marker {
+            width: 4px;
+            height: 12px;
+            background-color: #666;
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .progress-container {
+            height: 3px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #666;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .control-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+        
+        .play-btn:hover {
+            background-color: #444;
+        }
+        
+        .time-display {
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 0.5px;
+        }
+        
+        .equalizer-bar {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        
+        .eq-bar {
+            flex: 1;
+            background-color: #ddd;
+            border-radius: 2px 2px 0 0;
+            transition: height 0.1s ease;
+        }
+        
+        .waveform {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            gap: 1px;
+        }
+        
+        .wave-bar {
+            flex: 1;
+            background-color: #ddd;
+            border-radius: 1px 1px 0 0;
+            transition: all 0.1s ease;
+        }
+        
+        .playlist-item {
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .playlist-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .playlist-item.active {
+            background-color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        /* New styles for draggable switches */
+        .eq-slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .eq-slider {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .eq-track {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+        }
+        
+        .eq-handle {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #666;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        
+        .eq-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+        
+        .eq-value {
+            font-size: 10px;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+        
+        .eq-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .eq-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.75rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .eq-controls-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+        
+        /* Animation for playing state */
+        .playing .reel:first-child {
+            animation: spinReel 4s linear infinite;
+        }
+        
+        .playing .reel:last-child {
+            animation: spinReel 4s linear infinite reverse;
+        }
+        
+        @keyframes spinReel {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Chrome compatibility warning */
+        .chrome-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ff9800;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .chrome-warning button {
+            background-color: white;
+            color: #ff9800;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Chrome compatibility warning -->
+    <div class="chrome-warning" id="chromeWarning">
+        For best experience, please interact with the page first (click anywhere) to enable audio playback.
+        <button id="dismissWarning">OK</button>
+    </div>
+    
+    <div class="max-w-4xl w-full bg-white rounded-xl shadow-sm p-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Cassette Player -->
+            <div class="flex-1 flex flex-col items-center">
+                <h1 class="text-xl font-medium mb-6 text-center">CASSETTE</h1>
+                
+                <div class="cassette mb-8" id="cassette">
+                    <div class="cassette-window">
+                        <div class="reel">
+                            <div class="reel-center"></div>
+                        </div>
+                        
+                        <div class="reel">
+                            <div class="reel-center"></div>
+                        </div>
+                    </div>
+                    <div class="cassette-label" id="currentSongLabel">NO TAPE INSERTED</div>
+                </div>
+                
+                <!-- Waveform Visualization 
+                 <div class="tape"></div>
+                
+                
+                -->
+                <div class="waveform w-full mb-4" id="waveform">
+                    <!-- Wave bars will be added by JavaScript -->
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full mb-2">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="songProgress"></div>
+                    </div>
+                    <div class="flex justify-between mt-1">
+                        <span class="time-display" id="currentTime">0:00</span>
+                        <span class="time-display" id="totalTime">0:00</span>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="flex items-center gap-3 mb-8">
+                    <button class="control-btn" id="prevBtn">
+                        <i class="fas fa-backward text-gray-600"></i>
+                    </button>
+                    <button class="play-btn" id="playBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="nextBtn">
+                        <i class="fas fa-forward text-gray-600"></i>
+                    </button>
+                </div>
+                
+                <!-- Equalizer Section -->
+                <div class="eq-section w-full">
+                    <div class="eq-section-title">Equalizer Controls</div>
+                    <div class="eq-controls-grid">
+                        <!-- Sub Bass -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="subBassSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Sub Bass</div>
+                            <div class="eq-value" id="subBassValue">0dB</div>
+                        </div>
+                        
+                        <!-- Bass -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="bassSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Bass</div>
+                            <div class="eq-value" id="bassValue">0dB</div>
+                        </div>
+                        
+                        <!-- Low Mid -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="lowMidSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Low Mid</div>
+                            <div class="eq-value" id="lowMidValue">0dB</div>
+                        </div>
+                        
+                        <!-- Mid -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="midSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Mid</div>
+                            <div class="eq-value" id="midValue">0dB</div>
+                        </div>
+                        
+                        <!-- High Mid -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="highMidSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">High Mid</div>
+                            <div class="eq-value" id="highMidValue">0dB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="eq-controls-grid mt-2">
+                        <!-- Presence -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="presenceSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Presence</div>
+                            <div class="eq-value" id="presenceValue">0dB</div>
+                        </div>
+                        
+                        <!-- Treble -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="trebleSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Treble</div>
+                            <div class="eq-value" id="trebleValue">0dB</div>
+                        </div>
+                        
+                        <!-- Brilliance -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="brillianceSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Brilliance</div>
+                            <div class="eq-value" id="brillianceValue">0dB</div>
+                        </div>
+                        
+                        <!-- Air -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="airSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 50%;"></div>
+                            </div>
+                            <div class="eq-label">Air</div>
+                            <div class="eq-value" id="airValue">0dB</div>
+                        </div>
+                        
+                        <!-- Volume -->
+                        <div class="eq-slider-container">
+                            <div class="eq-slider" id="volumeSlider">
+                                <div class="eq-track"></div>
+                                <div class="eq-handle" style="top: 30%;"></div>
+                            </div>
+                            <div class="eq-label">Volume</div>
+                            <div class="eq-value" id="volumeValue">70%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Playlist -->
+            <div class="flex-1">
+                <h2 class="text-lg font-medium mb-4">PLAYLIST</h2>
+                
+                <div class="mb-4">
+                    <input type="file" id="fileInput" accept=".mp3,.wav,.ogg" class="hidden" multiple>
+                    <button onclick="document.getElementById('fileInput').click()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded flex items-center gap-2 transition">
+                        <i class="fas fa-plus"></i> Add Songs
+                    </button>
+                </div>
+                
+                <div class="h-96 overflow-y-auto pr-2" id="playlist">
+                    <div class="text-center text-gray-400 py-16">No songs in playlist</div>
+                </div>
+                
+                <div class="mt-4 text-sm text-gray-500">
+                    <div id="nowPlayingInfo">No song selected</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+    
+
+
+    
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Audio elements
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playBtn = document.getElementById('playBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const playlist = document.getElementById('playlist');
+            const fileInput = document.getElementById('fileInput');
+            const nowPlayingInfo = document.getElementById('nowPlayingInfo');
+            const currentSongLabel = document.getElementById('currentSongLabel');
+            const waveform = document.getElementById('waveform');
+            const cassette = document.getElementById('cassette');
+            const chromeWarning = document.getElementById('chromeWarning');
+            const dismissWarning = document.getElementById('dismissWarning');
+           
+            // State variables
+            let isPlaying = false;
+            let currentSongIndex = -1;
+            let songs = [];
+            let audioContext;
+            let analyser;
+            let dataArray;
+            let waveAnimationId;
+            let userInteracted = false;
+            let eqFilters = [];
+
+            // Check if Chrome
+            const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+            
+            // Show Chrome warning if needed
+            if (isChrome) {
+                chromeWarning.style.display = 'block';
+            }
+            
+            dismissWarning.addEventListener('click', function() {
+                chromeWarning.style.display = 'none';
+            });
+            
+            // Initialize the player
+            initPlayer();
+            
+            function initPlayer() {
+                // Create waveform bars
+                for (let i = 0; i < 60; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'wave-bar';
+                    bar.style.height = `${Math.random() * 20 + 10}%`;
+                    waveform.appendChild(bar);
+                }
+                
+                // Set up event listeners
+                playBtn.addEventListener('click', togglePlay);
+                prevBtn.addEventListener('click', playPrevious);
+                nextBtn.addEventListener('click', playNext);
+                fileInput.addEventListener('change', handleFileSelect);
+                
+                // Setup draggable EQ sliders with filter indices
+                setupEqSlider('subBass', -12, 12, true, 0);
+                setupEqSlider('bass', -12, 12, true, 1);
+                setupEqSlider('lowMid', -12, 12, true, 2);
+                setupEqSlider('mid', -12, 12, true, 3);
+                setupEqSlider('highMid', -12, 12, true, 4);
+                setupEqSlider('presence', -12, 12, true, 5);
+                setupEqSlider('treble', -12, 12, true, 6);
+                setupEqSlider('brilliance', -12, 12, true, 7);
+                setupEqSlider('air', -12, 12, true, 8);
+                setupEqSlider('volume', 0, 100, false);
+                
+                // Initialize audio context after user interaction
+                document.addEventListener('click', function initAudioContext() {
+                    if (!userInteracted) {
+                        userInteracted = true;
+                        chromeWarning.style.display = 'none';
+                        
+                        try {
+                            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                            analyser = audioContext.createAnalyser();
+                            analyser.fftSize = 256;
+                            const source = audioContext.createMediaElementSource(audioPlayer);
+                            
+                            // Create EQ filter chain
+                            const frequencies = [60, 250, 500, 1000, 2000, 4000, 6000, 12000, 16000];
+                            const types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'peaking', 'peaking', 'highshelf', 'highshelf', 'peaking'];
+                            
+                            eqFilters = frequencies.map((freq, index) => {
+                                const filter = audioContext.createBiquadFilter();
+                                filter.type = types[index];
+                                filter.frequency.value = freq;
+                                if (types[index] === 'peaking') {
+                                    filter.Q.value = 1;
+                                }
+                                return filter;
+                            });
+
+                            // Connect nodes: source -> filters -> analyser -> destination
+                            source.connect(eqFilters[0]);
+                            for (let i = 0; i < eqFilters.length - 1; i++) {
+                                eqFilters[i].connect(eqFilters[i + 1]);
+                            }
+                            eqFilters[eqFilters.length - 1].connect(analyser);
+                            analyser.connect(audioContext.destination);
+
+                            dataArray = new Uint8Array(analyser.frequencyBinCount);
+                            
+                            // Start visualization
+                            animateWaveform();
+                        } catch (e) {
+                            console.error('Audio Context not supported', e);
+                        }
+                        
+                        // Remove this listener after first interaction
+                        document.removeEventListener('click', initAudioContext);
+                    }
+                });
+            }
+            
+            function setupEqSlider(name, min, max, isDb = true, eqIndex = -1) {
+                const slider = document.getElementById(`${name}Slider`);
+                const handle = slider.querySelector('.eq-handle');
+                const valueDisplay = document.getElementById(`${name}Value`);
+                const trackHeight = slider.offsetHeight;
+                const handleHeight = handle.offsetHeight;
+                
+                let isDragging = false;
+                let startY = 0;
+                let startTop = 0;
+                let currentValue = isDb ? 0 : 70;
+                
+                // Set initial value display
+                updateValueDisplay();
+                
+                handle.addEventListener('mousedown', startDrag);
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', endDrag);
+                handle.addEventListener('touchstart', startDragTouch);
+                document.addEventListener('touchmove', dragTouch);
+                document.addEventListener('touchend', endDrag);
+                
+                function startDrag(e) {
+                    isDragging = true;
+                    startY = e.clientY;
+                    startTop = parseInt(handle.style.top || '50%');
+                    handle.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+                
+                function startDragTouch(e) {
+                    isDragging = true;
+                    startY = e.touches[0].clientY;
+                    startTop = parseInt(handle.style.top || '50%');
+                    handle.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+                
+                function drag(e) {
+                    if (!isDragging) return;
+                    
+                    const y = e.clientY;
+                    const deltaY = y - startY;
+                    let newTop = startTop + (deltaY / trackHeight * 100);
+                    
+                    // Constrain to slider bounds
+                    newTop = Math.max(0, Math.min(100, newTop));
+                    
+                    handle.style.top = `${newTop}%`;
+                    
+                    // Calculate value based on position
+                    const normalized = (100 - newTop) / 100;
+                    currentValue = isDb 
+                        ? Math.round(min + (max - min) * normalized)
+                        : Math.round(min + (max - min) * normalized);
+                    
+                    updateValueDisplay();
+                    e.preventDefault();
+                }
+                
+                function dragTouch(e) {
+                    if (!isDragging) return;
+                    
+                    const y = e.touches[0].clientY;
+                    const deltaY = y - startY;
+                    let newTop = startTop + (deltaY / trackHeight * 100);
+                    
+                    newTop = Math.max(0, Math.min(100, newTop));
+                    
+                    handle.style.top = `${newTop}%`;
+                    
+                    const normalized = (100 - newTop) / 100;
+                    currentValue = isDb 
+                        ? Math.round(min + (max - min) * normalized)
+                        : Math.round(min + (max - min) * normalized);
+                    
+                    updateValueDisplay();
+                    e.preventDefault();
+                }
+                
+                function endDrag() {
+                    isDragging = false;
+                    handle.style.cursor = 'grab';
+                }
+                
+                function updateValueDisplay() {
+                    if (name === 'volume') {
+                        audioPlayer.volume = currentValue / 100;
+                        valueDisplay.textContent = `${currentValue}%`;
+                    } else {
+                        valueDisplay.textContent = `${currentValue > 0 ? '+' : ''}${currentValue}dB`;
+                        if (eqIndex !== -1 && eqFilters[eqIndex]) {
+                            eqFilters[eqIndex].gain.value = currentValue;
+                        }
+                    }
+                }
+            }
+
+            // ... (keep all remaining JavaScript functions the same) ...
+            function togglePlay() {
+                if (songs.length === 0) return;
+                
+                if (isPlaying) {
+                    pauseAudio();
+                } else {
+                    playAudio();
+                }
+            }
+            
+            function playAudio() {
+                if (currentSongIndex === -1) {
+                    currentSongIndex = 0;
+                    loadSong(currentSongIndex);
+                }
+                
+                // Resume audio context if it was suspended
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                audioPlayer.play()
+                    .then(() => {
+                        isPlaying = true;
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        cassette.classList.add('playing');
+                    })
+                    .catch(error => {
+                        console.error('Playback failed:', error);
+                        // Show warning if this is Chrome and user hasn't interacted yet
+                        if (isChrome && !userInteracted) {
+                            chromeWarning.style.display = 'block';
+                        }
+                    });
+            }
+            
+            function pauseAudio() {
+                audioPlayer.pause();
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                cassette.classList.remove('playing');
+            }
+            
+            function playPrevious() {
+                if (songs.length === 0) return;
+                
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+                loadSong(currentSongIndex);
+                if (isPlaying) {
+                    playAudio();
+                }
+            }
+            
+            function playNext() {
+                if (songs.length === 0) return;
+                
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+                loadSong(currentSongIndex);
+                if (isPlaying) {
+                    playAudio();
+                }
+            }
+            
+            function updateProgress() {
+                const { currentTime: ct, duration } = audioPlayer;
+                const progressPercent = (ct / duration) * 100;
+                document.getElementById('songProgress').style.width = `${progressPercent}%`;
+                
+                // Update time display
+                document.getElementById('currentTime').textContent = formatTime(ct);
+                document.getElementById('totalTime').textContent = formatTime(duration);
+            }
+            
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+            
+            function updateSongInfo() {
+                const song = songs[currentSongIndex];
+                if (!song) return;
+                
+                currentSongLabel.textContent = song.name.length > 20 ? song.name.substring(0, 17) + '...' : song.name;
+                updateNowPlayingInfo();
+            }
+            
+            function updateNowPlayingInfo() {
+                if (currentSongIndex === -1) {
+                    nowPlayingInfo.textContent = 'No song selected';
+                    return;
+                }
+                
+                const song = songs[currentSongIndex];
+                nowPlayingInfo.innerHTML = `Now playing: <span class="font-medium">${song.name}</span>`;
+            }
+            
+            function loadSong(index) {
+                if (index < 0 || index >= songs.length) return;
+                
+                const song = songs[index];
+                audioPlayer.src = song.url;
+                currentSongIndex = index;
+                
+                // Update playlist UI
+                const playlistItems = playlist.querySelectorAll('.playlist-item');
+                playlistItems.forEach(item => item.classList.remove('active'));
+                if (playlistItems[index]) {
+                    playlistItems[index].classList.add('active');
+                    playlistItems[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                
+                updateSongInfo();
+                
+                // Reset progress bar
+                document.getElementById('songProgress').style.width = '0%';
+                document.getElementById('currentTime').textContent = '0:00';
+                
+                // When metadata is loaded, update total time
+                audioPlayer.addEventListener('loadedmetadata', function() {
+                    document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+                }, { once: true });
+                
+                // When song can play through
+                audioPlayer.addEventListener('canplaythrough', function() {
+                    if (isPlaying) {
+                        playAudio();
+                    }
+                }, { once: true });
+            }
+            
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length === 0) return;
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.includes('audio')) {
+                        const song = {
+                            name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+                            url: URL.createObjectURL(file)
+                        };
+                        songs.push(song);
+                    }
+                }
+                
+                updatePlaylist();
+                fileInput.value = ''; // Reset file input
+            }
+            
+            function updatePlaylist() {
+                if (songs.length === 0) {
+                    playlist.innerHTML = '<div class="text-center text-gray-400 py-16">No songs in playlist</div>';
+                    return;
+                }
+                
+                playlist.innerHTML = '';
+                songs.forEach((song, index) => {
+                    const playlistItem = document.createElement('div');
+                    playlistItem.className = `playlist-item ${index === currentSongIndex ? 'active' : ''}`;
+                    playlistItem.textContent = `${index + 1}. ${song.name}`;
+                    
+                    playlistItem.addEventListener('click', () => {
+                        currentSongIndex = index;
+                        loadSong(index);
+                        if (!isPlaying) {
+                            playAudio();
+                        }
+                    });
+                    
+                    playlist.appendChild(playlistItem);
+                });
+            }
+
+
+            function animateWaveform() {
+                if (!analyser) return;
+                
+                analyser.getByteTimeDomainData(dataArray);
+                
+                const waveBars = waveform.querySelectorAll('.wave-bar');
+                for (let i = 0; i < waveBars.length; i++) {
+                    const barIndex = Math.floor(i * dataArray.length / waveBars.length);
+                    const value = dataArray[barIndex] / 255;
+                    const height = (value * 80 + 20) * (1 + Math.sin(Date.now() / 200 + i * 0.2) * 0.2);
+                    waveBars[i].style.height = `${height}%`;
+                    waveBars[i].style.transform = `scaleY(${1 + Math.sin(Date.now() / 300 + i * 0.3) * 0.3})`;
+                    waveBars[i].style.backgroundColor = `hsl(${200 + (i * 2)}, 70%, 60%)`;
+                }
+                
+                waveAnimationId = requestAnimationFrame(animateWaveform);
+            }
+            
+            // Set up audio player event listeners
+            audioPlayer.addEventListener('timeupdate', updateProgress);
+            audioPlayer.addEventListener('ended', playNext);
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', function() {
+                if (waveAnimationId) {
+                    cancelAnimationFrame(waveAnimationId);
+                }
+                songs.forEach(song => {
+                    if (song.url.startsWith('blob:')) {
+                        URL.revokeObjectURL(song.url);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
