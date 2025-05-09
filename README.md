@@ -1,4 +1,4 @@
 # Cassette-Equalizer
 Music player
 
- ![Image Alt](https://github.com/adityasuman10/CUDA-SOUL/blob/23e05b739bef3da49fac87ea5b353b9de20ebf81/arishem.png)
+ ![Image Alt](https://github.com/adityasuman10/Cassette-Equalizer/blob/249398a0791afbf8645237c75810b02b434a489b/Screenshot%20(182).png)
